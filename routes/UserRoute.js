@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {authenticate} = require('../database/database')
+const User = require('../models/User')
 const {isDev} = require('../config')
 
 router.all('/', async function (req, res) {
@@ -12,6 +13,7 @@ router.all('/', async function (req, res) {
 
     try {
         await authenticate()
+        await User.sync()
         result.database = 'connected'
     } catch (e) {
         result.database = e + ''

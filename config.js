@@ -14,7 +14,14 @@ const DBConfig = [
     {
         host: process.env.DB_HOST,
         dialect: process.env.DB_TYPE,
-        logging: isDev ? console.log : false
+        logging: isDev ? console.log : false,
+        define: {
+            charset: 'utf8mb4',
+            dialectOptions: {
+                collate: 'utf8mb4_unicode_ci'
+            },
+            timestamps: true
+        }
     }
 ]
 
