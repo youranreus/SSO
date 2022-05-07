@@ -5,7 +5,7 @@
 const dotenv = require('dotenv')
 dotenv.config()
 
-const isDev = Boolean(process.env.DEV)
+const isDev = process.env.DEV === 'true'
 
 const DBConfig = [
     process.env.DB_NAME,
@@ -14,7 +14,7 @@ const DBConfig = [
     {
         host: process.env.DB_HOST,
         dialect: process.env.DB_TYPE,
-        logging: isDev
+        logging: isDev ? console.log : false
     }
 ]
 
