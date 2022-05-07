@@ -1,9 +1,23 @@
 const express = require('express')
 const router = express.Router()
+const {authenticate} = require('../database/database')
+const {isDev} = require('../config')
 
-router.all('/', function (req, res) {
-    res.result.msg = 'SSO API'
-    res.json(res.result)
+router.all('/', async function (req, res) {
+    const result = {
+        msg: 'SSO API Status',
+        database: '',
+        env: isDev ? 'development' : 'production'
+    }
+
+    try {
+        await authenticate()
+        result.database = 'connected'
+    } catch (e) {
+        result.database = e + ''
+    }
+
+    res.json(result)
 });
 
 router.post('/register', async (req, res) => {
