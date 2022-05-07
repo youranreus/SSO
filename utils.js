@@ -17,7 +17,16 @@ const isDef = v => v !== undefined && v !== null
  */
 const checkParams = (keys, obj) => keys.every(k => isDef(obj[k]))
 
+class Result {
+    constructor(msg = 'ok', code = 0, data = {}) {
+        this.msg = msg
+        this.code = code
+        this.data = data
+    }
+}
+
 module.exports = {
     isDef,
-    checkParams
+    checkParams,
+    Result
 }
