@@ -66,6 +66,22 @@ const UserModel = {
                 msg: '密码哈希值不能为空',
             },
         }
+    },
+    stu_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            notNull: {
+                msg: '学号不能为空',
+            },
+            notEmpty: {
+                msg: '学号不能为空',
+            },
+            isNumeric: {
+                msg: '学号需要为数字'
+            }
+        }
     }
 }
 
