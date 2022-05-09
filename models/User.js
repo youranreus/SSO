@@ -67,21 +67,31 @@ const UserModel = {
             },
         }
     },
-    stu_id: {
+    s_id: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
             notNull: {
-                msg: '学号不能为空',
+                msg: '学工号不能为空',
             },
             notEmpty: {
-                msg: '学号不能为空',
+                msg: '学工号不能为空',
             },
             isNumeric: {
-                msg: '学号需要为数字'
+                msg: '学工号需要为数字'
             }
         }
+    },
+    role: {
+        type: DataTypes.ENUM('student', 'teacher')
+    },
+    grade: {
+        type: DataTypes.STRING
+    },
+    gender: {
+        type: DataTypes.ENUM('male', 'female'),
+        defaultValue: 'male'
     }
 }
 
