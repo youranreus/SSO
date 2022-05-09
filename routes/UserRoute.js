@@ -24,7 +24,10 @@ router.post('/register', async (req, res) => {
  * 登录路由
  */
 router.post('/login', async (req, res) => {
-    res.json(new Result('登录接口'))
+    if(!checkParams(['email', 'password'], req.body))
+        res.json(new Result('参数缺失'))
+    else
+        res.json(await UserService.Login(req.body.email, req.body.password))
 })
 
 /**

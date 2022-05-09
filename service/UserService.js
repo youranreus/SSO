@@ -26,6 +26,23 @@ async function Register(data) {
 }
 
 /**
+ * 登录
+ * @param email
+ * @param password
+ * @returns {Promise<Result>}
+ */
+async function Login(email, password) {
+    const u = await User.findOne({where: {email}})
+    if(u === null)
+        return new Result('用户不存在', 0)
+
+    if(password === u.password)
+        return new Result('success', 0, {...u.toJSON(), token: '假装有个token'})
+    else
+        return new Result('密码错误', 0)
+}
+
+/**
  * 检查状态
  * @returns {Promise<Result>}
  */
@@ -47,5 +64,6 @@ async function checkStatus() {
 
 module.exports = {
     Register,
-    checkStatus
+    checkStatus,
+    Login
 }
