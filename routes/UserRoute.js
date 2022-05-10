@@ -41,7 +41,7 @@ router.post('/update', async (req, res) => {
  * 验证接口
  */
 router.get('/validate', async (req, res) => {
-    res.json(new Result('验证接口'))
+    res.json(await UserService.validateToken(req.get('Authorization')))
 })
 
 /**

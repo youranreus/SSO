@@ -2,7 +2,7 @@
  * @author 季悠然
  * @date 2022-05-07
  */
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize')
 const {db} = require('../database/database')
 
 const UserModel = {

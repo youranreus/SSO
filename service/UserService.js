@@ -2,10 +2,11 @@
  * @author 季悠然
  * @date 2022-05-07
  */
-const {authenticate} = require("../database/database");
-const User = require("../models/User");
-const {Result} = require("../utils");
-const {isDev, tokenConfig} = require("../config");
+const {authenticate} = require("../database/database")
+const User = require("../models/User")
+const TokenWhiteList = require("../models/TokenWhiteList")
+const {Result} = require("../utils")
+const {isDev, tokenConfig} = require("../config")
 const jwt = require("jsonwebtoken")
 
 /**
@@ -34,11 +35,10 @@ async function Register(data) {
  */
 async function Login(email, password) {
     const u = await User.findOne({where: {email}})
-    if(u === null)
+    if (u === null)
         return new Result('用户不存在', 0)
 
-    if(password === u.password)
-    {
+    if (password === u.password) {
         // 签发token
         const token = 'Bearer ' + jwt.sign({
                 iss: 'SZTUACM--FEGroup',
@@ -50,10 +50,44 @@ async function Login(email, password) {
                 expiresIn: tokenConfig.tokenExpiredTime
             },
         )
-        return new Result('success', 0, {...u.toJSON(), token})
-    }
-    else
+
+        try {
+            const t = await TokenWhiteList.findOne({where: {user: u.UUID}})
+            if(t === null)
+                await TokenWhiteList.create({token: token, user: u.UUID})
+            else
+            {
+                t.token = token
+                await t.save()
+            }
+            return new Result('success', 0, {...u.toJSON(), token})
+        } catch (e) {
+            return new Result(e + '', 0, {})
+        }
+
+    } else
         return new Result('密码错误', 0)
+}
+
+/**
+ * 验证token
+ * @param rawToken
+ * @returns {Promise<Result>}
+ */
+async function validateToken(rawToken) {
+    const token = rawToken.replaceAll('Bearer ', '')
+    const whiteList = await TokenWhiteList.findOne({where: {token: rawToken}})
+    if(whiteList === null)
+        return new Result('token不存在', 0)
+
+    const verifiedJWT = jwt.verify(token, tokenConfig.tokenSecret)
+
+    if(verifiedJWT.uuid !== whiteList.user)
+        return new Result('token非法', 0)
+    else if (verifiedJWT.token < Date.now())
+        return new Result('token已过期', 0)
+
+    return new Result('success', 0)
 }
 
 /**
@@ -64,6 +98,7 @@ async function checkStatus() {
     try {
         await authenticate()
         await User.sync()
+        await TokenWhiteList.sync()
         return new Result('SSO API Status', 0, {
             database: 'connected',
             env: isDev ? 'development' : 'production'
@@ -79,5 +114,6 @@ async function checkStatus() {
 module.exports = {
     Register,
     checkStatus,
-    Login
+    Login,
+    validateToken
 }
