@@ -53,10 +53,9 @@ async function Login(email, password) {
 
         try {
             const t = await TokenWhiteList.findOne({where: {user: u.UUID}})
-            if(t === null)
+            if (t === null)
                 await TokenWhiteList.create({token: token, user: u.UUID})
-            else
-            {
+            else {
                 t.token = token
                 await t.save()
             }
@@ -77,15 +76,14 @@ async function Login(email, password) {
 async function validateToken(rawToken) {
     const token = rawToken.replaceAll('Bearer ', '')
     const whiteList = await TokenWhiteList.findOne({where: {token: rawToken}})
-    if(whiteList === null)
+    if (whiteList === null)
         return new Result('token不存在', 0)
 
     const verifiedJWT = jwt.verify(token, tokenConfig.tokenSecret)
 
-    if(verifiedJWT.uuid !== whiteList.user)
+    if (verifiedJWT.uuid !== whiteList.user)
         return new Result('token非法', 0)
-    else if (verifiedJWT.token < Date.now())
-    {
+    else if (verifiedJWT.token < Date.now()) {
         await whiteList.destroy()
         return new Result('token已过期', 0)
     }
@@ -114,9 +112,28 @@ async function checkStatus() {
     }
 }
 
+/**
+ * 登出
+ * @param token
+ * @returns {Promise<Result>}
+ */
+async function Logout(token) {
+    const check = await validateToken(token)
+    if (check.msg !== 'success')
+        return check
+    try {
+        const t = await TokenWhiteList.findOne({where: {token: token}})
+        await t.destroy()
+        return new Result('success', 0)
+    } catch (e) {
+        return new Result(e + '')
+    }
+}
+
 module.exports = {
     Register,
     checkStatus,
     Login,
-    validateToken
+    validateToken,
+    Logout
 }

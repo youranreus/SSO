@@ -48,7 +48,7 @@ router.get('/validate', async (req, res) => {
  * 登出接口
  */
 router.post('/logout', async (req, res) => {
-    res.json(new Result('登出接口'))
+    res.json(await UserService.Logout(req.get('Authorization')))
 })
 
 module.exports = router
