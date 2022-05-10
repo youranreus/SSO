@@ -18,12 +18,12 @@ async function Register(data) {
     try {
         // 这里需要添加fields，避免传入的data中包含了非法字段
         const u = await User.create(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
-        return new Result('success', 0, u.toJSON())
+        return new Result('success', 200, u.toJSON())
     } catch (e) {
         return new Result(e.toString()
             .replaceAll('SequelizeValidationError: ', '')
             .replaceAll('Validation error: ', '')
-            .replaceAll('\n', ' '), 1)
+            .replaceAll('\n', ' '), 400)
     }
 }
 
@@ -36,7 +36,7 @@ async function Register(data) {
 async function Login(email, password) {
     const u = await User.findOne({where: {email}})
     if (u === null)
-        return new Result('用户不存在', 0)
+        return new Result('用户不存在', 400)
 
     if (password === u.password) {
         // 签发token
@@ -59,13 +59,13 @@ async function Login(email, password) {
                 t.token = token
                 await t.save()
             }
-            return new Result('success', 0, {...u.toJSON(), token})
+            return new Result('success', 200, {...u.toJSON(), token})
         } catch (e) {
-            return new Result(e + '', 0, {})
+            return new Result(e + '', 400, {})
         }
 
     } else
-        return new Result('密码错误', 0)
+        return new Result('密码错误', 400)
 }
 
 /**
@@ -77,18 +77,18 @@ async function validateToken(rawToken) {
     const token = rawToken.replaceAll('Bearer ', '')
     const whiteList = await TokenWhiteList.findOne({where: {token: rawToken}})
     if (whiteList === null)
-        return new Result('token不存在', 0)
+        return new Result('token不存在', 400)
 
     const verifiedJWT = jwt.verify(token, tokenConfig.tokenSecret)
 
     if (verifiedJWT.uuid !== whiteList.user)
-        return new Result('token非法', 0)
+        return new Result('token非法', 400)
     else if (verifiedJWT.token < Date.now()) {
         await whiteList.destroy()
-        return new Result('token已过期', 0)
+        return new Result('token已过期', 400)
     }
 
-    return new Result('success', 0)
+    return new Result('success', 200)
 }
 
 /**
@@ -100,12 +100,12 @@ async function checkStatus() {
         await authenticate()
         await User.sync()
         await TokenWhiteList.sync()
-        return new Result('SSO API Status', 0, {
+        return new Result('SSO API Status', 200, {
             database: 'connected',
             env: isDev ? 'development' : 'production'
         })
     } catch (e) {
-        return new Result('SSO API Status', 0, {
+        return new Result('SSO API Status', 500, {
             database: e + '',
             env: isDev ? 'development' : 'production'
         })
