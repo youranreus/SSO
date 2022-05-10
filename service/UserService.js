@@ -8,6 +8,7 @@ const TokenWhiteList = require("../models/TokenWhiteList")
 const {Result} = require("../utils")
 const {isDev, tokenConfig} = require("../config")
 const jwt = require("jsonwebtoken")
+const {Op} = require('sequelize')
 
 /**
  * 注册
@@ -29,12 +30,12 @@ async function Register(data) {
 
 /**
  * 登录
- * @param email
+ * @param account
  * @param password
  * @returns {Promise<Result>}
  */
-async function Login(email, password) {
-    const u = await User.findOne({where: {email}})
+async function Login(account, password) {
+    const u = await User.findOne({where: {[Op.or]: [{email: account},{s_id: account}]}})
     if (u === null)
         return new Result('用户不存在', 400)
 

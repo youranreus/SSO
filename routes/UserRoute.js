@@ -27,10 +27,10 @@ router.post('/register', async (req, res) => {
  * 登录路由
  */
 router.post('/login', async (req, res) => {
-    if (!checkParams(['email', 'password'], req.body))
+    if (!checkParams(['account', 'password'], req.body))
         res.status(400).json(new Result('参数缺失'))
     else {
-        const _res = await UserService.Login(req.body.email, req.body.password)
+        const _res = await UserService.Login(req.body.account, req.body.password)
         res.status(_res.code).json(_res)
     }
 })
