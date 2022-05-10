@@ -38,8 +38,15 @@ router.post('/login', async (req, res) => {
 /**
  * 信息更新路由
  */
-router.post('/update', async (req, res) => {
-    res.json(new Result('信息更新接口'))
+router.put('/', async (req, res) => {
+    if (!isDef(req.get('Authorization')) || req.get('Authorization') === '')
+        res.status(401).json(new Result('token required'))
+    else if (Object.keys(req.body).length === 0)
+        res.status(400).json(new Result('参数缺失'))
+    else {
+        const _res = await UserService.Update(req.body, req.get('Authorization'))
+        res.status(_res.code).json(_res)
+    }
 })
 
 /**

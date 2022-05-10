@@ -122,12 +122,43 @@ async function Logout(token) {
     const check = await validateToken(token)
     if (check.msg !== 'success')
         return check
+
     try {
         const t = await TokenWhiteList.findOne({where: {token: token}})
         await t.destroy()
-        return new Result('success', 0)
+        return new Result('success', 200)
     } catch (e) {
-        return new Result(e + '')
+        return new Result(e + '', 400)
+    }
+}
+
+/**
+ * 更新用户信息
+ * @param data
+ * @param token
+ * @returns {Promise<Result>}
+ */
+async function Update(data, token) {
+    const check = await validateToken(token)
+    if (check.msg !== 'success')
+        return check
+
+    try {
+        const u = await User.findOne({where: {UUID: jwt.verify(token.replace('Bearer ', ''), tokenConfig.tokenSecret).uuid}})
+        const fields = ['name', 'nickname', 'email', 's_id', 'password', 'gender', 'grade']
+
+        for (const k of Object.keys(data)) {
+            //如果是修改密码，则需要退出登录
+            if(k === 'password' && u[k] !== data[k])
+                await Logout(token)
+            if(fields.includes(k))
+                u[k] = data[k]
+        }
+        await u.save()
+
+        return new Result('success', 200, u.toJSON())
+    } catch (e) {
+        return new Result(e + '', 400)
     }
 }
 
@@ -136,5 +167,6 @@ module.exports = {
     checkStatus,
     Login,
     validateToken,
-    Logout
+    Logout,
+    Update
 }
