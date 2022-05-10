@@ -85,7 +85,10 @@ async function validateToken(rawToken) {
     if(verifiedJWT.uuid !== whiteList.user)
         return new Result('token非法', 0)
     else if (verifiedJWT.token < Date.now())
+    {
+        await whiteList.destroy()
         return new Result('token已过期', 0)
+    }
 
     return new Result('success', 0)
 }
