@@ -7,6 +7,11 @@ dotenv.config()
 
 const isDev = process.env.DEV === 'true'
 
+const SECOND = 1000
+const MINUTE = 60 * SECOND
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+
 const DBConfig = [
     process.env.DB_NAME,
     process.env.DB_USERNAME,
@@ -25,7 +30,17 @@ const DBConfig = [
     }
 ]
 
+const tokenConfig = {
+    tokenSecret: process.env.TOKEN_SECRET,
+    tokenExpiredTime: 5 * DAY,
+}
+
 module.exports = {
     DBConfig,
-    isDev
+    isDev,
+    SECOND,
+    MINUTE,
+    HOUR,
+    DAY,
+    tokenConfig
 }

@@ -5,7 +5,8 @@
 const {authenticate} = require("../database/database");
 const User = require("../models/User");
 const {Result} = require("../utils");
-const {isDev} = require("../config");
+const {isDev, tokenConfig} = require("../config");
+const jwt = require("jsonwebtoken")
 
 /**
  * 注册
@@ -37,7 +38,20 @@ async function Login(email, password) {
         return new Result('用户不存在', 0)
 
     if(password === u.password)
-        return new Result('success', 0, {...u.toJSON(), token: '假装有个token'})
+    {
+        // 签发token
+        const token = 'Bearer ' + jwt.sign({
+                iss: 'SZTUACM--FEGroup',
+                iat: Date.now(),
+                uuid: u.UUID,
+            },
+            tokenConfig.tokenSecret,
+            {
+                expiresIn: tokenConfig.tokenExpiredTime
+            },
+        )
+        return new Result('success', 0, {...u.toJSON(), token})
+    }
     else
         return new Result('密码错误', 0)
 }
