@@ -5,6 +5,7 @@
 const {authenticate} = require("../database/database")
 const User = require("../models/User")
 const TokenWhiteList = require("../models/TokenWhiteList")
+const EmailCaptcha = require("../models/EmailCaptcha")
 const {Result} = require("../utils")
 const {isDev, tokenConfig} = require("../config")
 const jwt = require("jsonwebtoken")
@@ -101,6 +102,7 @@ async function checkStatus() {
         await authenticate()
         await User.sync()
         await TokenWhiteList.sync()
+        await EmailCaptcha.sync()
         return new Result('SSO API Status', 200, {
             database: 'connected',
             env: isDev ? 'development' : 'production'

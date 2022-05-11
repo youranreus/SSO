@@ -35,6 +35,14 @@ const tokenConfig = {
     tokenExpiredTime: 5 * DAY,
 }
 
+const mailConfig = {
+    user: process.env.MAIL_USER,
+    port: process.env.MAIL_PORT,
+    pass: process.env.MAIL_PASS,
+    host: process.env.MAIL_HOST,
+    name: process.env.MAIL_NAME
+}
+
 module.exports = {
     DBConfig,
     isDev,
@@ -42,5 +50,6 @@ module.exports = {
     MINUTE,
     HOUR,
     DAY,
-    tokenConfig
+    tokenConfig,
+    mailConfig
 }
