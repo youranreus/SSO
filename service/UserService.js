@@ -7,7 +7,7 @@ const User = require("../models/User")
 const TokenWhiteList = require("../models/TokenWhiteList")
 const EmailCaptcha = require("../models/EmailCaptcha")
 const EmailService = require("../service/EmailService")
-const {Result} = require("../utils")
+const {Result, md5Crypto} = require("../utils")
 const {isDev, tokenConfig} = require("../config")
 const jwt = require("jsonwebtoken")
 const {Op} = require('sequelize')
@@ -25,6 +25,7 @@ async function Register(data) {
 
         // 这里需要添加fields，避免传入的data中包含了非法字段
         const u = User.build(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
+        u.password = md5Crypto(data.password)
         await u.save()
         return new Result('success', 200, u.toJSON())
     } catch (e) {
@@ -47,7 +48,7 @@ async function ResetPassword(data) {
             return check
 
         const u = await User.findOne({where: {email: data.email}})
-        u.password = data.password
+        u.password = md5Crypto(data.password)
         await u.save()
         return new Result('success', 200)
 
@@ -67,7 +68,7 @@ async function Login(account, password) {
     if (u === null)
         return new Result('用户不存在', 400)
 
-    if (password === u.password) {
+    if (md5Crypto(password) === u.password) {
         // 签发token
         const token = 'Bearer ' + jwt.sign({
                 iss: 'SZTUACM--FEGroup',
@@ -174,15 +175,12 @@ async function Update(data, token) {
 
     try {
         const u = await User.findOne({where: {UUID: jwt.verify(token.replace('Bearer ', ''), tokenConfig.tokenSecret).uuid}})
-        const fields = ['name', 'nickname', 'email', 's_id', 'password', 'gender', 'grade']
+        const fields = ['name', 'nickname', 'email', 's_id', 'gender', 'grade']
 
-        for (const k of Object.keys(data)) {
-            //如果是修改密码，则需要退出登录
-            if(k === 'password' && u[k] !== data[k])
-                await Logout(token)
+        for (const k of Object.keys(data))
             if(fields.includes(k))
                 u[k] = data[k]
-        }
+
         await u.save()
 
         return new Result('success', 200, u.toJSON())
