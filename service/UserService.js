@@ -24,13 +24,35 @@ async function Register(data) {
             return check
 
         // 这里需要添加fields，避免传入的data中包含了非法字段
-        const u = await User.create(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
+        const u = User.build(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
+        await u.save()
         return new Result('success', 200, u.toJSON())
     } catch (e) {
         return new Result(e.toString()
             .replaceAll('SequelizeValidationError: ', '')
             .replaceAll('Validation error: ', '')
             .replaceAll('\n', ' '), 400)
+    }
+}
+
+/**
+ * 重置密码
+ * @param data
+ * @returns {Promise<Result>}
+ */
+async function ResetPassword(data) {
+    try {
+        const check = await EmailService.validate(data.captcha, data.email)
+        if(check.code !== 200)
+            return check
+
+        const u = await User.findOne({where: {email: data.email}})
+        u.password = data.password
+        await u.save()
+        return new Result('success', 200)
+
+    } catch (e) {
+        return new Result(e.toString() , 400)
     }
 }
 
@@ -175,5 +197,6 @@ module.exports = {
     Login,
     validateToken,
     Logout,
-    Update
+    Update,
+    ResetPassword
 }

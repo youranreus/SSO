@@ -33,14 +33,14 @@ async function validate(captcha, email) {
 
     try {
         await ec.destroy()
-        return new Result('验证成功', 200)
+        return new Result('success', 200)
     } catch (e) {
         return new Result(e + '', 500)
     }
 }
 
 /**
- * 发送验证码
+ * 发送注册验证码
  * @param email
  * @returns {Promise<Result>}
  */
@@ -48,6 +48,28 @@ async function sendReg(email) {
     if((await User.findAndCountAll({where: {email}})).count !== 0)
         return new Result('邮箱已被注册', 400)
 
+    return await send(email, '注册SZTU-ACM账号')
+}
+
+/**
+ * 发送修改密码邮箱
+ * @param email
+ * @returns {Promise<Result>}
+ */
+async function sendReset(email) {
+    if((await User.findAndCountAll({where: {email}})).count === 0)
+        return new Result('邮箱不存在', 400)
+
+    return await send(email, '修改密码')
+}
+
+/**
+ * 发送邮件
+ * @param email
+ * @param message
+ * @returns {Promise<Result>}
+ */
+async function send(email, message) {
     // 生成验证码
     const capt = md5Crypto(`${email}-${Date.now().toString()}`).slice(0, 8)
     const EmailOption = {
@@ -58,7 +80,7 @@ async function sendReg(email) {
         to: email,
         subject: '请验证您的邮箱',
         html: `<p>你好！${email}</p>
-              <p>您正在注册SZTU-ACM账号</p>
+              <p>您正在${message}</p>
               <p>注册验证码为：${capt}</P>
               <P>有效时间为5分钟</p>`,
     }
@@ -93,5 +115,6 @@ async function sendReg(email) {
 
 module.exports = {
     sendReg,
-    validate
+    validate,
+    sendReset
 }
