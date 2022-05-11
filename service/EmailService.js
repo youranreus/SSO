@@ -18,6 +18,32 @@ const EmailCaptchaConfig= {
     },
 }
 
+/**
+ * 校验邮箱验证码
+ * @param captcha
+ * @param email
+ * @returns {Promise<Result>}
+ */
+async function validate(captcha, email) {
+    const ec = await EmailCaptcha.findOne({where: {captcha: captcha}})
+    if(ec === null || ec.email !== email)
+        return new Result('无效验证码', 400)
+    else if((new Date(ec.updatedAt).getTime()) - Date.now() > MINUTE * 5)
+        return new Result('验证码已过期', 400)
+
+    try {
+        await ec.destroy()
+        return new Result('验证成功', 200)
+    } catch (e) {
+        return new Result(e + '', 500)
+    }
+}
+
+/**
+ * 发送验证码
+ * @param email
+ * @returns {Promise<Result>}
+ */
 async function sendReg(email) {
     if((await User.findAndCountAll({where: {email}})).count !== 0)
         return new Result('邮箱已被注册', 400)
@@ -41,7 +67,7 @@ async function sendReg(email) {
     const ec = await EmailCaptcha.findOne({where: {email}})
     if(ec !== null)
     {
-        if((new Date(ec.updatedAt).getTime()) - Date.now() < MINUTE)
+        if(Math.abs((new Date(ec.updatedAt).getTime()) - Date.now()) < MINUTE)
             return new Result('太频繁辣', 400)
 
         try {
@@ -66,5 +92,6 @@ async function sendReg(email) {
 }
 
 module.exports = {
-    sendReg
+    sendReg,
+    validate
 }

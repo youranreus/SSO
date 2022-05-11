@@ -6,6 +6,7 @@ const {authenticate} = require("../database/database")
 const User = require("../models/User")
 const TokenWhiteList = require("../models/TokenWhiteList")
 const EmailCaptcha = require("../models/EmailCaptcha")
+const EmailService = require("../service/EmailService")
 const {Result} = require("../utils")
 const {isDev, tokenConfig} = require("../config")
 const jwt = require("jsonwebtoken")
@@ -18,6 +19,10 @@ const {Op} = require('sequelize')
  */
 async function Register(data) {
     try {
+        const check = await EmailService.validate(data.captcha, data.email)
+        if(check.code !== 200)
+            return check
+
         // 这里需要添加fields，避免传入的data中包含了非法字段
         const u = await User.create(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
         return new Result('success', 200, u.toJSON())
