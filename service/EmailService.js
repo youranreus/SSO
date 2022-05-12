@@ -28,7 +28,7 @@ async function validate(captcha, email) {
     const ec = await EmailCaptcha.findOne({where: {captcha: captcha}})
     if(ec === null || ec.email !== email)
         return new Result('无效验证码', 400)
-    else if((new Date(ec.updatedAt).getTime()) - Date.now() > MINUTE * 5)
+    else if(Math.abs((new Date(ec.updatedAt).getTime()) - Date.now()) > MINUTE * 5)
         return new Result('验证码已过期', 400)
 
     try {
