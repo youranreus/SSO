@@ -57,8 +57,8 @@ router.get('/validate', async (req, res) => {
         const _res = await UserService.validateToken(req.get('Authorization'))
         res.status(_res.code).json(_res)
     }
-
-    res.status(401).json(new Result('token required'))
+    else
+        res.status(401).json(new Result('token required'))
 })
 
 /**
@@ -69,15 +69,18 @@ router.post('/logout', async (req, res) => {
         const _res = await UserService.Logout(req.get('Authorization'))
         res.status(_res.code).json(_res)
     }
-
-    res.status(401).json(new Result('token required'))
+    else
+        res.status(401).json(new Result('token required'))
 })
 
 router.put('/password', async (req, res) => {
     if (!checkParams(['email', 'password', 'captcha'], req.body))
         res.status(400).json(new Result('参数缺失'))
-    const _res = await UserService.ResetPassword(req.body)
-    res.status(_res.code).json(_res)
+    else
+    {
+        const _res = await UserService.ResetPassword(req.body)
+        res.status(_res.code).json(_res)
+    }
 })
 
 module.exports = router
