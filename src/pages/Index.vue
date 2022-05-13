@@ -4,10 +4,12 @@
   </h2>
 </template>
 
-<script>
-export default {
-  name: "index"
-}
+<script setup>
+import {getHi} from "../api";
+
+getHi().then(res => {
+  console.log(res.data)
+})
 </script>
 
 <style scoped>
