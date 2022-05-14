@@ -1,6 +1,6 @@
 <template>
   <h2 class="title">
-    这里是注册
+    这里是注册...
   </h2>
 </template>
 
