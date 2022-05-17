@@ -74,11 +74,11 @@
           alert("请先填写你的邮箱！");
           this.email = "";
         } else {
-          const postObj = {
+          const getObj = {
             type: 'reg',
             email: this.email
           }
-          sendEmailCode(postObj).then(res => {
+          sendEmailCode(getObj).then(res => {
             console.log(res);
           }).catch(err => {
             console.log(err);
@@ -116,7 +116,7 @@
             console.log(res);
           }).catch(err => {
             alert(err.response.data.msg);
-          })  
+          });
         }
       }
     }
@@ -190,7 +190,6 @@
   }
   .input-email {
     display: flex;
-    
   }
   #captcha {
     border-radius: 5px 0 0 5px;

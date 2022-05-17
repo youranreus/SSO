@@ -16,8 +16,8 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-const sendEmailCode = (postObj) => {
-    return API.get('/email/captcha?' + Qs.stringify(postObj));
+const sendEmailCode = (getObj) => {
+    return API.get('/email/captcha?' + Qs.stringify(getObj));
 }
 
 const sendRegisterInfo = (postObj) => {
