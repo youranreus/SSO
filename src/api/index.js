@@ -4,9 +4,10 @@
  */
 
 import axios from 'axios'
+import Qs from 'qs'
 
 const API = axios.create({
-    baseURL: 'https://i.exia.xyz'
+    baseURL: 'http://119.91.127.163:3000/api'
 })
 
 API.interceptors.request.use((req) => {
@@ -15,4 +16,13 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
+const sendEmailCode = (postObj) => {
+    return API.get('/email/captcha?' + Qs.stringify(postObj));
+}
+
+const sendRegisterInfo = (postObj) => {
+    return API.post('/user/register', postObj);
+}
+
 export const getHi = () => API.get('/')
+export { sendEmailCode, sendRegisterInfo }
