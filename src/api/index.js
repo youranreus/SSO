@@ -28,6 +28,10 @@ const sendRegisterInfo = (postObj) => {
     return API.post('/user/register', postObj);
 }
 
+const sendToken = () => {
+    return API.get('/user/validate');
+}
+
 export const getHi = () => API.get('/')
-export { sendLoginInfo }
+export { sendLoginInfo, sendToken }
 export { sendEmailCode, sendRegisterInfo }
