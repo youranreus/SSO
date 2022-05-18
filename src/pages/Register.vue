@@ -47,6 +47,9 @@
             <div class="button-row">
                 <button @click="registerButtonClick">注册</button>
             </div>
+            <div class="text-row">
+              <a href="/login">已有账号，点击此处返回登陆页面！</a>
+            </div>
         </div>
       </div>
   </div>
@@ -54,7 +57,7 @@
 
 <script>
   import { sendEmailCode, sendRegisterInfo } from '../api'
-import router from '../router';
+  import router from '../router';
 
   export default {
     name: 'Register',
@@ -221,5 +224,16 @@ import router from '../router';
     font-size: 0.8rem;
     font-weight: 600;
     color: #fff;
+  }
+  .text-row {
+    margin-top: 12px;
+    text-align: center;
+  }
+  .text-row a {
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: rgba(116, 96, 96, 0.808);
+    cursor: pointer;
   }
 </style>

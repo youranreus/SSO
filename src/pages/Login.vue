@@ -16,6 +16,9 @@
           <div class="button-row">
             <button @click="loginBtnClick">登陆</button>
           </div>
+          <div class="text-row">
+            <a href="/register">还没有账号，点击此处立即注册！</a>
+          </div>
         </div>
       </div>
   </div>
@@ -40,6 +43,9 @@
         }
         sendLoginInfo(postObj).then(res => {
           console.log(res);
+          if (res.data.code === 200) {
+            alert("登陆成功！");
+          }
         }).catch(err => {
           console.log(err);
           alert(err.response.data.msg);
@@ -60,6 +66,7 @@
     max-width: 720px;
     margin: 76px auto;
   }
+
   #register-card {
     box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
     background-color: #f5f6f9;
@@ -112,6 +119,7 @@
   .button-row {
     padding: 10px 15px;
   }
+
   button {
     cursor: pointer;
     background-color: #6777ef;
@@ -126,5 +134,16 @@
     font-size: 0.8rem;
     font-weight: 600;
     color: #fff;
+  }
+  .text-row {
+    margin-top: 12px;
+    text-align: center;
+  }
+  .text-row a {
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: rgba(116, 96, 96, 0.808);
+    cursor: pointer;
   }
 </style>
