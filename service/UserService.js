@@ -120,9 +120,9 @@ async function validateToken(rawToken) {
     else if (verifiedJWT.token < Date.now()) {
         await whiteList.destroy()
         return new Result('token已过期', 400)
-    }
+    } else
+        return new Result('success', 200)
 
-    return new Result('success', 200)
 }
 
 /**
