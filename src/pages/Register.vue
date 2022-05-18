@@ -141,7 +141,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 720px;
+    width: 513.61px;
     margin: 22px auto;
   }
   #register-card {
@@ -149,7 +149,7 @@
     background-color: #f5f6f9;
     border-radius: 5px;
     border-top: 2px solid #4582b31c;
-    max-width: 720px;
+    width: 513.61px;
     display: flex;
     flex-direction: column;
   }
