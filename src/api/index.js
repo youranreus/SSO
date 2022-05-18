@@ -16,6 +16,10 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
+const sendLoginInfo = (postObj) => {
+    return API.post('/user/login', postObj);
+}
+
 const sendEmailCode = (getObj) => {
     return API.get('/email/captcha?' + Qs.stringify(getObj));
 }
@@ -25,4 +29,5 @@ const sendRegisterInfo = (postObj) => {
 }
 
 export const getHi = () => API.get('/')
+export { sendLoginInfo }
 export { sendEmailCode, sendRegisterInfo }
