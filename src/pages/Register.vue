@@ -124,8 +124,8 @@
               router.push('/login');
             }
           }).catch(err => {
-            console.log("错误信息：", err.response);
-            alert(err);
+            console.log("错误信息：", err.response.data.msg);
+            alert(err.response.data.msg);
           });
         }
       }
