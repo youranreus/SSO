@@ -25,7 +25,8 @@
 </template>
 
 <script>
-  import { sendLoginInfo } from '../api';
+  import { sendLoginInfo, sendToken } from '../api';
+  import router from '../router';
 
   export default {
     name: 'Login',
@@ -35,16 +36,43 @@
         password: ""
       }
     },
+    created() {
+      this.judgeToken();
+    },
     methods: {
+      back() {
+        let lastUrl = window.location.search.trim();
+        // console.log(lastUrl);
+        if (lastUrl === "") {
+          router.push('/');
+        } else {
+          router.go(-1);
+        }
+      },
+      judgeToken() {
+        const token = localStorage.getItem('token');
+        if (token !== null) {
+          // console.log(token);
+          sendToken().then(res => {
+            console.log("token返回：", res);
+            this.back();
+          }).catch(err => {
+            console.log("token返回错误信息：", err);
+            localStorage.clear();
+          })
+        }
+      },
       loginBtnClick() {
         const postObj = {
           account: this.account,
           password: this.password
         }
         sendLoginInfo(postObj).then(res => {
-          console.log(res);
           if (res.data.code === 200) {
+            console.log(res.data);
             alert("登陆成功！");
+            localStorage.setItem('token', res.data.data.token);
+            router.push('/');
           }
         }).catch(err => {
           console.log(err);

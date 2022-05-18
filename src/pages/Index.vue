@@ -1,19 +1,31 @@
 <template>
   <h2 class="title">
-    这里是首页
-    <br>
-    <a href="/login">登陆</a>
-    <br>
-    <a href="/register">注册</a>
+    {{ message }}
   </h2>
 </template>
 
-<script setup>
-import {getHi} from "../api";
-
-getHi().then(res => {
-  console.log(res.data)
-})
+<script>
+export default {
+  name: 'Index',
+  data() {
+    return {
+      message: "",
+      nowTime: 0
+    }
+  },
+  created() {
+    this.nowTime = new Date().getHours();
+    if (this.nowTime < 11) {
+      this.message = "早上好";
+    } else if (this.nowTime < 14) {
+      this.message = "中午好";
+    } else if (this.nowTime < 19) {
+      this.message = "下午好";
+    } else {
+      this.message = "晚上好";
+    }
+  }
+}
 </script>
 
 <style scoped>
