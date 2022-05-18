@@ -3,6 +3,7 @@
  * @date 2022-05-13
  */
 import {createRouter, createWebHistory} from "vue-router"
+import Register from "../pages/Register.vue"
 
 const routes = [
     {
@@ -17,6 +18,13 @@ const routes = [
         component: ()=> import('../pages/Login.vue'),
         meta: {
             title: '登录'
+        }
+    },
+    {
+        path: '/register',
+        component: Register,
+        meta: {
+            title: '注册'
         }
     }
 ]
