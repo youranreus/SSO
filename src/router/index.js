@@ -4,6 +4,7 @@
  */
 import {createRouter, createWebHistory} from "vue-router"
 import Login from "../pages/Login.vue"
+import Register from "../pages/Register.vue"
 
 const routes = [
     {
@@ -18,6 +19,13 @@ const routes = [
         component: Login,
         meta: {
             title: '登录'
+        }
+    },
+    {
+        path: '/register',
+        component: Register,
+        meta: {
+            title: '注册'
         }
     }
 ]

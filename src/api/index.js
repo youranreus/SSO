@@ -4,6 +4,7 @@
  */
 
 import axios from 'axios'
+import Qs from 'qs'
 
 const API = axios.create({
     baseURL: 'http://119.91.127.163:3000/api'
@@ -19,5 +20,14 @@ const sendLoginInfo = (postObj) => {
     return API.post('/user/login', postObj);
 }
 
+const sendEmailCode = (getObj) => {
+    return API.get('/email/captcha?' + Qs.stringify(getObj));
+}
+
+const sendRegisterInfo = (postObj) => {
+    return API.post('/user/register', postObj);
+}
+
 export const getHi = () => API.get('/')
 export { sendLoginInfo }
+export { sendEmailCode, sendRegisterInfo }
