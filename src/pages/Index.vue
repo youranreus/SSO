@@ -1,6 +1,10 @@
 <template>
   <h2 class="title">
     这里是首页
+    <br>
+    <a href="/login">登陆</a>
+    <br>
+    <a href="/register">注册</a>
   </h2>
 </template>
 
@@ -20,5 +24,8 @@ getHi().then(res => {
   opacity: 0.6;
   margin: 200px 0;
   letter-spacing: .3rem;
+}
+a {
+  text-decoration: none;
 }
 </style>

@@ -47,6 +47,9 @@
             <div class="button-row">
                 <button @click="registerButtonClick">注册</button>
             </div>
+            <div class="text-row">
+              <a href="/login">已有账号，点击此处返回登陆页面！</a>
+            </div>
         </div>
       </div>
   </div>
@@ -54,6 +57,7 @@
 
 <script>
   import { sendEmailCode, sendRegisterInfo } from '../api'
+  import router from '../router';
 
   export default {
     name: 'Register',
@@ -79,7 +83,8 @@
             email: this.email
           }
           sendEmailCode(getObj).then(res => {
-            console.log(res);
+            alert("验证码已发送，请前往邮箱查阅！")
+            console.log("邮箱成功发送返回：", res);
           }).catch(err => {
             console.log(err);
             alert(err.response.data.msg);
@@ -113,9 +118,14 @@
             captcha: this.captcha
           }
           sendRegisterInfo(postObj).then(res => {
-            console.log(res);
+            console.log("注册成功返回：", res);
+            alert('注册成功');
+            if (res.data.code === 200) {
+              router.push('/login');
+            }
           }).catch(err => {
-            alert(err.response.data.msg);
+            console.log("错误信息：", err.response);
+            alert(err);
           });
         }
       }
@@ -131,7 +141,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 720px;
+    width: 513.61px;
     margin: 22px auto;
   }
   #register-card {
@@ -139,7 +149,7 @@
     background-color: #f5f6f9;
     border-radius: 5px;
     border-top: 2px solid #4582b31c;
-    max-width: 720px;
+    width: 513.61px;
     display: flex;
     flex-direction: column;
   }
@@ -214,5 +224,16 @@
     font-size: 0.8rem;
     font-weight: 600;
     color: #fff;
+  }
+  .text-row {
+    margin-top: 12px;
+    text-align: center;
+  }
+  .text-row a {
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: rgba(116, 96, 96, 0.808);
+    cursor: pointer;
   }
 </style>
