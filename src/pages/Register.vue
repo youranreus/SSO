@@ -54,6 +54,7 @@
 
 <script>
   import { sendEmailCode, sendRegisterInfo } from '../api'
+import router from '../router';
 
   export default {
     name: 'Register',
@@ -79,7 +80,8 @@
             email: this.email
           }
           sendEmailCode(getObj).then(res => {
-            console.log(res);
+            alert("验证码已发送，请前往邮箱查阅！")
+            console.log("邮箱成功发送返回：", res);
           }).catch(err => {
             console.log(err);
             alert(err.response.data.msg);
@@ -113,9 +115,14 @@
             captcha: this.captcha
           }
           sendRegisterInfo(postObj).then(res => {
-            console.log(res);
+            console.log("注册成功返回：", res);
+            alert('注册成功');
+            if (res.data.code === 200) {
+              router.push('/login');
+            }
           }).catch(err => {
-            alert(err.response.data.msg);
+            console.log("错误信息：", err.response);
+            alert(err);
           });
         }
       }
