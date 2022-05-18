@@ -27,12 +27,13 @@ async function Register(data) {
         const u = User.build(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
         u.password = md5Crypto(data.password)
         await u.save()
-        return new Result('success', 200, u.toJSON())
+        const deleteStatus = await EmailService.destroy(check.data.capt)
+        if(deleteStatus.code === 200)
+            return new Result('success', 200, u.toJSON())
+        else
+            return deleteStatus
     } catch (e) {
-        return new Result(e.toString()
-            .replaceAll('SequelizeValidationError: ', '')
-            .replaceAll('Validation error: ', '')
-            .replaceAll('\n', ' '), 400)
+        return new Result(e.toString(), 400)
     }
 }
 
@@ -50,8 +51,11 @@ async function ResetPassword(data) {
         const u = await User.findOne({where: {email: data.email}})
         u.password = md5Crypto(data.password)
         await u.save()
-        return new Result('success', 200)
-
+        const deleteStatus = await EmailService.destroy(check.data.capt)
+        if(deleteStatus.code === 200)
+            return new Result('success', 200, u.toJSON())
+        else
+            return deleteStatus
     } catch (e) {
         return new Result(e.toString() , 400)
     }

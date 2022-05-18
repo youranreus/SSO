@@ -32,7 +32,20 @@ async function validate(captcha, email) {
         return new Result('验证码已过期', 400)
 
     try {
-        await ec.destroy()
+        return new Result('success', 200, {capt: ec})
+    } catch (e) {
+        return new Result(e + '', 500)
+    }
+}
+
+/**
+ * 删除验证码
+ * @param captcha
+ * @returns {Promise<Result>}
+ */
+async function destroy(captcha) {
+    try {
+        await captcha.destroy()
         return new Result('success', 200)
     } catch (e) {
         return new Result(e + '', 500)
@@ -116,5 +129,6 @@ async function send(email, message) {
 module.exports = {
     sendReg,
     validate,
-    sendReset
+    sendReset,
+    destroy
 }
