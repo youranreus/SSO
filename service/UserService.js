@@ -117,12 +117,11 @@ async function validateToken(rawToken) {
 
     if (verifiedJWT.uuid !== whiteList.user)
         return new Result('token非法', 400)
-    else if (verifiedJWT.token < Date.now()) {
+    else if (verifiedJWT.exp < Date.now()) {
         await whiteList.destroy()
         return new Result('token已过期', 400)
     } else
         return new Result('success', 200)
-
 }
 
 /**
