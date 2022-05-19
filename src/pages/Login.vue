@@ -19,6 +19,9 @@
           <div class="text-row">
             <a href="/register">还没有账号，点击此处立即注册！</a>
           </div>
+          <div class="text-row">
+              <a href="/retrieve">忘记密码，点击此处找回密码！</a>
+            </div>
         </div>
       </div>
   </div>

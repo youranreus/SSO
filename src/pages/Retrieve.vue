@@ -1,0 +1,170 @@
+<template>
+  <div class="container">
+    <div id="register-card">
+      <div class="card-header">
+        <h2>找回密码</h2>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <label for="password">新密码</label>
+          <input v-model.trim="password" type="text" placeholder="请输入新密码" name="password" required>
+        </div>
+        <div class="row">
+          <label for="email">邮箱</label>
+          <input v-model.trim="email" type="text" placeholder="请输入邮箱" name="email" required>
+        </div>
+        <div class="row">
+          <label for="captcha">验证码</label>
+          <div class="input-email">
+            <input v-model="captcha" id="captcha" type="text" placeholder="请输入邮箱验证码" name="captcha" required>
+            <button >发送</button>
+          </div>
+          
+        </div>
+        <div class="button-row">
+            <button >重置密码</button>
+          </div>
+        <div class="text-row">
+            <a href="/login">点击此处返回登陆页面！</a>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+import { sendEmailCode } from '../api';
+import router from '../router';
+
+export default {
+  name: "Retrieve",
+  data () {
+    return {
+      email: "",
+      captcha: "",
+      password: ""
+    }
+  }
+}
+</script>
+
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 513.61px;
+  margin: 76px auto;
+}
+
+#register-card {
+  box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
+  background-color: #f5f6f9;
+  border-radius: 5px;
+  border-top: 2px solid #4582b31c;
+  width: 513.61px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  line-height: 30px;
+  width: 100%;
+  min-height: 30px;
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid #f9f9f9;
+}
+
+.card-header {
+  font-size: 1rem;
+}
+
+.card-content {
+  padding: 20px 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+  letter-spacing: 0.05rem;
+  padding: 0 15px;
+}
+
+.row label {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+}
+
+.row input {
+  display: block;
+  height: 40px;
+  width: 100%;
+  padding: 8px 12px;
+
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.row input:focus {
+  border-color: #95a0f4;
+}
+
+.button-row {
+  padding: 10px 15px;
+}
+
+.input-email {
+  display: flex;
+}
+
+#captcha {
+  border-radius: 5px 0 0 5px;
+  width: 78%
+}
+
+.input-email button {
+  padding: 0px 3px;
+  width: 32%;
+  border-radius: 0 5px 5px 0;
+}
+button {
+  cursor: pointer;
+  background-color: #6777ef;
+  outline: none;
+  padding: 10px 15px;
+  width: 100%;
+  border-radius: 5px;
+  border-color: transparent;
+  box-shadow: 0 2px 6px #acb5f6;
+
+  letter-spacing: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.text-row {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.text-row a {
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  color: rgba(116, 96, 96, 0.808);
+  cursor: pointer;
+}
+
+
+</style>

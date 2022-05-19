@@ -50,6 +50,9 @@
             <div class="text-row">
               <a href="/login">已有账号，点击此处返回登陆页面！</a>
             </div>
+            <div class="text-row">
+              <a href="/retrieve">忘记密码，点击此处找回密码！</a>
+            </div>
         </div>
       </div>
   </div>
