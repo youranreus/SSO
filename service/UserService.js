@@ -53,7 +53,7 @@ async function ResetPassword(data) {
         await u.save()
         const deleteStatus = await EmailService.destroy(check.data.capt)
         if(deleteStatus.code === 200)
-            return new Result('success', 200, u.toJSON())
+            return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
         else
             return deleteStatus
     } catch (e) {
@@ -93,7 +93,7 @@ async function Login(account, password) {
                 t.token = token
                 await t.save()
             }
-            return new Result('success', 200, {...u.toJSON(), token})
+            return new Result('success', 200, {...JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])), token})
         } catch (e) {
             return new Result(e + '', 400, {})
         }
@@ -186,7 +186,7 @@ async function Update(data, token) {
 
         await u.save()
 
-        return new Result('success', 200, u.toJSON())
+        return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
     } catch (e) {
         return new Result(e + '', 400)
     }
