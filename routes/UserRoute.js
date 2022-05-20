@@ -62,6 +62,18 @@ router.get('/validate', async (req, res) => {
 })
 
 /**
+ * 获取用户信息
+ */
+router.get('/info', async (req, res) => {
+    if (isDef(req.get('Authorization')) && req.get('Authorization') !== '') {
+        const _res = await UserService.getUserData(req.get('Authorization'))
+        res.status(_res.code).json(_res)
+    }
+    else
+        res.status(401).json(new Result('token required'))
+})
+
+/**
  * 登出接口
  */
 router.post('/logout', async (req, res) => {

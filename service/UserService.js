@@ -103,6 +103,23 @@ async function Login(account, password) {
 }
 
 /**
+ * 获取用户信息
+ * @param rawToken
+ * @returns {Promise<Result>}
+ */
+async function getUserData(rawToken) {
+    const check = await validateToken(rawToken)
+    if (check.msg !== 'success')
+        return check
+    const token = rawToken.replaceAll('Bearer ', '')
+    const verifiedJWT = jwt.verify(token, tokenConfig.tokenSecret)
+    const u = await User.findOne({where: {uuid: verifiedJWT.uuid}})
+    if(u === null)
+        return new Result('用户不存在', '400')
+    return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
+}
+
+/**
  * 验证token
  * @param rawToken
  * @returns {Promise<Result>}
@@ -199,5 +216,6 @@ module.exports = {
     validateToken,
     Logout,
     Update,
-    ResetPassword
+    ResetPassword,
+    getUserData
 }
