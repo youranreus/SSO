@@ -48,7 +48,7 @@
                 <button @click="registerButtonClick">注册</button>
             </div>
             <div class="text-row">
-              <a href="/login">已有账号，点击此处返回登陆页面！</a>
+              <router-link :to="{path: '/login'}">已有账号，点击此处返回登陆页面！</router-link>
             </div>
         </div>
       </div>
@@ -121,7 +121,7 @@
             console.log("注册成功返回：", res);
             alert('注册成功');
             if (res.data.code === 200) {
-              router.push('/login');
+              router.push('/#/login');
             }
           }).catch(err => {
             console.log("错误信息：", err.response.data.msg);

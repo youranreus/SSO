@@ -17,7 +17,7 @@
             <button @click="loginBtnClick">登陆</button>
           </div>
           <div class="text-row">
-            <a href="/register">还没有账号，点击此处立即注册！</a>
+            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
           </div>
         </div>
       </div>
@@ -43,8 +43,6 @@
       back() {
         if (this.$route.query.from !== undefined) {
           router.go(-1);
-        } else {
-          router.push('/');
         }
       },
       judgeToken() {
