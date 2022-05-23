@@ -2,7 +2,7 @@
  * @author 季悠然
  * @date 2022-05-13
  */
-import {createRouter, createWebHistory} from "vue-router"
+import {createRouter, createWebHashHistory} from "vue-router"
 import Login from "../pages/Login.vue"
 import Register from "../pages/Register.vue"
 
@@ -31,7 +31,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 })
 
