@@ -17,7 +17,7 @@
             <button @click="loginBtnClick">登陆</button>
           </div>
           <div class="text-row">
-            <a href="/register">还没有账号，点击此处立即注册！</a>
+            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
           </div>
         </div>
       </div>
@@ -41,18 +41,15 @@
     },
     methods: {
       back() {
-        let lastUrl = window.location.search.trim();
-        // console.log(lastUrl);
-        if (lastUrl === "") {
-          router.push('/');
-        } else {
+        if (this.$route.query.from !== undefined) {
           router.go(-1);
+        } else {
+          router.push('/');
         }
       },
       judgeToken() {
         const token = localStorage.getItem('token');
         if (token !== null) {
-          // console.log(token);
           sendToken().then(res => {
             console.log("token返回：", res);
             this.back();
@@ -69,10 +66,12 @@
         }
         sendLoginInfo(postObj).then(res => {
           if (res.data.code === 200) {
-            console.log(res.data);
+            // console.log("登陆成功返回信息：", res.data.data);
             alert("登陆成功！");
-            localStorage.setItem('token', res.data.data.token);
-            router.push('/');
+            for (const [key, value] of Object.entries(res.data.data)) {
+              localStorage.setItem(key, value);
+            }
+            this.back();
           }
         }).catch(err => {
           console.log(err);
