@@ -42,7 +42,8 @@
     methods: {
       back() {
         if (this.$route.query.from !== undefined) {
-          router.go(-1);
+          window.location.href = this.$route.query.from + "?UUID=" 
+           + localStorage.getItem('UUID') + "&token=" + localStorage.getItem('token');
         } else {
           router.push('/');
         }
@@ -66,7 +67,7 @@
         }
         sendLoginInfo(postObj).then(res => {
           if (res.data.code === 200) {
-            // console.log("登陆成功返回信息：", res.data.data);
+            console.log("登陆成功返回信息：", res.data);
             alert("登陆成功！");
             for (const [key, value] of Object.entries(res.data.data)) {
               localStorage.setItem(key, value);
@@ -75,7 +76,7 @@
           }
         }).catch(err => {
           console.log(err);
-          alert(err.response.data.msg);
+          alert(err);
         });
       }
     }
