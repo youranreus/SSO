@@ -53,7 +53,7 @@ async function ResetPassword(data) {
         await u.save()
         const deleteStatus = await EmailService.destroy(check.data.capt)
         if(deleteStatus.code === 200)
-            return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
+            return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade', 'uuid'])))
         else
             return deleteStatus
     } catch (e) {
@@ -93,7 +93,7 @@ async function Login(account, password) {
                 t.token = token
                 await t.save()
             }
-            return new Result('success', 200, {...JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])), token})
+            return new Result('success', 200, {...JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade', 'uuid'])), token})
         } catch (e) {
             return new Result(e + '', 400, {})
         }
@@ -116,7 +116,7 @@ async function getUserData(rawToken) {
     const u = await User.findOne({where: {uuid: verifiedJWT.uuid}})
     if(u === null)
         return new Result('用户不存在', '400')
-    return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
+    return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade', 'uuid'])))
 }
 
 /**
@@ -203,7 +203,7 @@ async function Update(data, token) {
 
         await u.save()
 
-        return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade'])))
+        return new Result('success', 200, JSON.parse(JSON.stringify(u.toJSON(), ['nickname', 'name', 'gender', 'uuid', 'email', 's_id', 'role', 'grade', 'uuid'])))
     } catch (e) {
         return new Result(e + '', 400)
     }
