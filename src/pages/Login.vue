@@ -42,7 +42,8 @@
     methods: {
       back() {
         if (this.$route.query.from !== undefined) {
-          router.go(-1);
+          window.location.href = this.$route.query.from + "?UUID=" 
+           + localStorage.getItem('UUID') + "&token=" + localStorage.getItem('token');
         } else {
           router.push('/');
         }
@@ -66,7 +67,7 @@
         }
         sendLoginInfo(postObj).then(res => {
           if (res.data.code === 200) {
-            // console.log("登陆成功返回信息：", res.data.data);
+            console.log("登陆成功返回信息：", res.data);
             alert("登陆成功！");
             for (const [key, value] of Object.entries(res.data.data)) {
               localStorage.setItem(key, value);
@@ -74,7 +75,7 @@
             this.back();
           }
         }).catch(err => {
-          console.log(err);
+          console.log(err.response.data.msg);
           alert(err.response.data.msg);
         });
       }
@@ -90,7 +91,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 513.61px;
+    width: 512px;
     margin: 76px auto;
   }
 
@@ -99,7 +100,7 @@
     background-color: #f5f6f9;
     border-radius: 5px;
     border-top: 2px solid #4582b31c;
-    width: 513.61px;
+    width: 512px;
     display: flex;
     flex-direction: column;
   }
