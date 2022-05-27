@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div id="register-card">
+      <div @keypress.enter="judgeIfInput" id="register-card">
         <div class="card-header">
           <h2>注册</h2>
         </div>
@@ -92,6 +92,13 @@
             console.log(err);
             Message.info(err.response.data.msg);
           })
+        }
+      },
+      judgeIfInput(event) {
+        const target = event.target;
+        if (target.tagName === "INPUT" && this.name !== "" && this.nickname !== "" && this.s_id !== "" &&
+        this.password !== "" && this.repassword !== "" && this.email !== "" && this.captcha !== "") {
+          this.registerButtonClick();
         }
       },
       registerButtonClick() {
