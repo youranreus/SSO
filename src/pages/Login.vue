@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div id="register-card">
+      <div @keypress.enter="judgeIfInput" id="login-card">
         <div class="card-header">
           <h2>登陆</h2>
         </div>
@@ -63,6 +63,13 @@
           })
         }
       },
+      judgeIfInput(event) {
+        const target = event.target;
+        if (target.tagName === "INPUT" && this.account !== "" && this.password !== "") {
+          this.loginBtnClick();
+        }
+      }
+      ,
       loginBtnClick() {
         if (this.account === "") {
           Message.info("请填写学号或邮箱！");
@@ -106,7 +113,7 @@
     margin: 76px auto;
   }
 
-  #register-card {
+  #login-card {
     box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
     background-color: #f5f6f9;
     border-radius: 5px;
