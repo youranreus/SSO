@@ -1,12 +1,12 @@
 <template>
   <div class="container">
+    <h2 class="title">
+      {{ message }}
+    </h2>
     <div v-if="show" class="row">
       <router-link :to="{path: '/login'}">登录</router-link>
       <router-link :to="{path: '/register'}">注册</router-link>
     </div>
-    <h2 class="title">
-      {{ message }}
-    </h2>
   </div>
 
 </template>
@@ -43,9 +43,9 @@ export default {
       }
     },
     initialPage() {
-      const nick = localStorage.getItem('nickname');
-      if (nick !== null) {
-        this.nickName = nick;
+      const user_info = JSON.parse(localStorage.getItem('USER_INFO'));
+      if (user_info !== null) {
+        this.nickName = user_info.nickname;
       } else {
         this.nickName = "";
       }
@@ -85,7 +85,7 @@ export default {
   }
   .container .row {
     display: flex;
-    border-bottom: 3px solid #f9f9f9;
+    border-top: 3px solid #f9f9f9;
   }
   .container .row a {
     outline: none;
