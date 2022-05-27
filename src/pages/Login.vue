@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div @keypress.enter="judgeIfInput" id="register-card">
+      <div @keypress.enter="judgeIfInput" id="login-card">
         <div class="card-header">
           <h2>登陆</h2>
         </div>
@@ -113,7 +113,7 @@
     margin: 76px auto;
   }
 
-  #register-card {
+  #login-card {
     box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
     background-color: #f5f6f9;
     border-radius: 5px;
