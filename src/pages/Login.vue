@@ -27,6 +27,9 @@
 <script>
   import { sendLoginInfo, sendToken } from '../api';
   import router from '../router';
+  import md5 from 'js-md5';
+  import { Message } from '@arco-design/web-vue';
+  import '@arco-design/web-vue/es/message/style/css.js'
 
   export default {
     name: 'Login',
@@ -61,23 +64,31 @@
         }
       },
       loginBtnClick() {
-        const postObj = {
-          account: this.account,
-          password: this.password
-        }
-        sendLoginInfo(postObj).then(res => {
-          if (res.data.code === 200) {
-            console.log("登陆成功返回信息：", res.data);
-            alert("登陆成功！");
-            for (const [key, value] of Object.entries(res.data.data)) {
-              localStorage.setItem(key, value);
-            }
-            this.back();
+        if (this.account === "") {
+          Message.info("请填写学号或邮箱！");
+        } else if (this.password === "") {
+          Message.info("请填写密码！");
+        } else {
+          const postObj = {
+            account: this.account,
+            password: md5(this.password)
           }
-        }).catch(err => {
-          console.log(err.response.data.msg);
-          alert(err.response.data.msg);
-        });
+          sendLoginInfo(postObj).then(res => {
+            if (res.data.code === 200) {
+              console.log("登陆成功返回信息：", res.data);
+              localStorage.setItem('token', res.data.data.token);
+              localStorage.setItem('USER_INFO', JSON.stringify(res.data.data, (key, val) => {
+                if (key === "token") return undefined;
+                else return val;
+              }));
+              Message.info("登陆成功！");
+              this.back();
+            }
+          }).catch(err => {
+            console.log(err.response.data.msg);
+            Message.info(err.response.data.msg);
+          });
+        }
       }
     }
   }
