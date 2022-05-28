@@ -7,7 +7,7 @@
       <div class="card-content">
         <div class="row">
           <label for="password">新密码</label>
-          <input v-model.trim="password" type="text" placeholder="请输入新密码（6~22位）" name="password" required>
+          <input v-model.trim="password" type="password" placeholder="请输入新密码（6~22位）" name="password" required>
         </div>
         <div class="row">
           <label for="email">邮箱</label>
@@ -17,15 +17,15 @@
           <label for="captcha">验证码</label>
           <div class="input-email">
             <input v-model="captcha" id="captcha" type="text" placeholder="请输入邮箱验证码" name="captcha" required>
-            <button >发送</button>
+            <button @click="emailCheckCode">发送</button>
           </div>
           
         </div>
         <div class="button-row">
-            <button >重置密码</button>
+            <button @click="send">重置密码</button>
           </div>
         <div class="text-row">
-            <a href="/login">点击此处返回登陆页面！</a>
+            <a @click="gotoLogin">点击此处返回登陆页面！</a>
           </div>
       </div>
     </div>
@@ -96,6 +96,9 @@ export default {
         })
       }
       console.log("发送重置密码请求");
+    },
+    gotoLogin(){
+      this.$router.push("/login")
     }
   }
 }
