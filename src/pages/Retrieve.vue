@@ -73,8 +73,8 @@ export default {
       if (that.captcha == "") {
         alert("请输入验证码！")
       }
-      else if (that.password.length < 6 || that.password.length > 16) {
-        alert("密码长度应当为6-16位!");
+      else if (that.password.length < 6 || that.password.length > 22) {
+        alert("密码长度应当为6~22位!");
       }
       else {
         const putObj = {
