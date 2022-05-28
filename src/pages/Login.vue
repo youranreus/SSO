@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div id="register-card">
+      <div @keypress.enter="judgeIfInput" id="login-card">
         <div class="card-header">
           <h2>登陆</h2>
         </div>
@@ -17,7 +17,7 @@
             <button @click="loginBtnClick">登陆</button>
           </div>
           <div class="text-row">
-            <a href="/register">还没有账号，点击此处立即注册！</a>
+            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
           </div>
           <div class="text-row">
               <a href="/retrieve">忘记密码，点击此处找回密码！</a>
@@ -30,6 +30,9 @@
 <script>
   import { sendLoginInfo, sendToken } from '../api';
   import router from '../router';
+  import md5 from 'js-md5';
+  import { Message } from '@arco-design/web-vue';
+  import '@arco-design/web-vue/es/message/style/css.js'
 
   export default {
     name: 'Login',
@@ -44,18 +47,16 @@
     },
     methods: {
       back() {
-        let lastUrl = window.location.search.trim();
-        // console.log(lastUrl);
-        if (lastUrl === "") {
-          router.push('/');
+        if (this.$route.query.from !== undefined) {
+          window.location.href = this.$route.query.from + "?UUID=" 
+           + localStorage.getItem('UUID') + "&token=" + localStorage.getItem('token');
         } else {
-          router.go(-1);
+          router.push('/');
         }
       },
       judgeToken() {
         const token = localStorage.getItem('token');
         if (token !== null) {
-          // console.log(token);
           sendToken().then(res => {
             console.log("token返回：", res);
             this.back();
@@ -65,22 +66,39 @@
           })
         }
       },
-      loginBtnClick() {
-        const postObj = {
-          account: this.account,
-          password: this.password
+      judgeIfInput(event) {
+        const target = event.target;
+        if (target.tagName === "INPUT" && this.account !== "" && this.password !== "") {
+          this.loginBtnClick();
         }
-        sendLoginInfo(postObj).then(res => {
-          if (res.data.code === 200) {
-            console.log(res.data);
-            alert("登陆成功！");
-            localStorage.setItem('token', res.data.data.token);
-            router.push('/');
+      }
+      ,
+      loginBtnClick() {
+        if (this.account === "") {
+          Message.info("请填写学号或邮箱！");
+        } else if (this.password === "") {
+          Message.info("请填写密码！");
+        } else {
+          const postObj = {
+            account: this.account,
+            password: md5(this.password)
           }
-        }).catch(err => {
-          console.log(err);
-          alert(err.response.data.msg);
-        });
+          sendLoginInfo(postObj).then(res => {
+            if (res.data.code === 200) {
+              console.log("登陆成功返回信息：", res.data);
+              localStorage.setItem('token', res.data.data.token);
+              localStorage.setItem('USER_INFO', JSON.stringify(res.data.data, (key, val) => {
+                if (key === "token") return undefined;
+                else return val;
+              }));
+              Message.info("登陆成功！");
+              this.back();
+            }
+          }).catch(err => {
+            console.log(err.response.data.msg);
+            Message.info(err.response.data.msg);
+          });
+        }
       }
     }
   }
@@ -94,16 +112,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 513.61px;
+    width: 512px;
     margin: 76px auto;
   }
 
-  #register-card {
+  #login-card {
     box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
     background-color: #f5f6f9;
     border-radius: 5px;
     border-top: 2px solid #4582b31c;
-    width: 513.61px;
+    width: 512px;
     display: flex;
     flex-direction: column;
   }

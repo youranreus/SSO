@@ -7,7 +7,7 @@ import axios from 'axios'
 import Qs from 'qs'
 
 const API = axios.create({
-  baseURL: 'http://119.91.127.163:3000/api'
+  baseURL: 'https://sso.exia.xyz/api'
 })
 
 API.interceptors.request.use((req) => {

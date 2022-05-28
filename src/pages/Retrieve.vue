@@ -7,7 +7,7 @@
       <div class="card-content">
         <div class="row">
           <label for="password">新密码</label>
-          <input v-model.trim="password" type="text" placeholder="请输入新密码" name="password" required>
+          <input v-model.trim="password" type="text" placeholder="请输入新密码（6~22位）" name="password" required>
         </div>
         <div class="row">
           <label for="email">邮箱</label>
@@ -36,6 +36,9 @@
 <script>
 import { sendEmailCode, sendResetPassword } from '../api';
 import router from '../router';
+import md5 from 'js-md5';
+import { Message } from '@arco-design/web-vue';
+import '@arco-design/web-vue/es/message/style/css.js'
 
 export default {
   name: "Retrieve",
@@ -49,9 +52,9 @@ export default {
   methods: {
     emailCheckCode () {
       let that = this;
-      console.log("正在检查邮箱格式...");
+      Message.info("正在检查邮箱格式...");
       if (that.email.search('@') == -1) {
-        alert("请输入邮箱的正确格式！");
+        Message.info("请输入邮箱的正确格式！");
         console.log("邮箱格式错误");
       }
       else {
@@ -60,36 +63,36 @@ export default {
           email: that.email
         }
         sendEmailCode(getObj).then(res => {
-          alert("验证码已发送，请前往邮箱查阅！");
+         Message.info("验证码已发送，请前往邮箱查阅！");
           console.log("已发送验证码", res);
         }).catch(err => {
           console.log(err);
-          alert(err.response.data.msg);
+          Message.info(err.response.data.msg);
         })
       }
     },
     send () {
       let that = this;
       if (that.captcha == "") {
-        alert("请输入验证码！")
+        Message.info("请输入验证码！")
       }
       else if (that.password.length < 6 || that.password.length > 22) {
-        alert("密码长度应当为6~22位!");
+        Message.info("密码长度应当为6~22位!");
       }
       else {
         const putObj = {
           email: that.email,
           captcha: that.captcha,
-          password: that.password
+          password:md5(that.password)
         }
         sendResetPassword(putObj).then(res => {
-          alert("密码已重置，即将返回登录页面！")
+          Message.info("密码已重置，即将返回登录页面！")
           if (res.data.code === 200) {
             router.push('/login');
           }
         }).catch(err => {
           console.log(err);
-          alert(err.response.data.msg);
+          Message.info(err.response.data.msg);
         })
       }
       console.log("发送重置密码请求");

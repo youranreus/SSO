@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <div id="register-card">
+      <div @keypress.enter="judgeIfInput" id="register-card">
         <div class="card-header">
           <h2>注册</h2>
         </div>
@@ -24,7 +24,7 @@
             <div class="row">
               <div class="left">
                 <label for="password">密码</label>
-                <input v-model="password" id="password" type="password" placeholder="请输入密码" name="password" required>                
+                <input v-model="password" id="password" type="password" placeholder="请输入密码（6~22位）" name="password" required>                
               </div>
               <div class="right">
                 <label for="repassword">确认密码</label>
@@ -48,7 +48,7 @@
                 <button @click="registerButtonClick">注册</button>
             </div>
             <div class="text-row">
-              <a href="/login">已有账号，点击此处返回登陆页面！</a>
+              <router-link :to="{path: '/login'}">已有账号，点击此处返回登陆页面！</router-link>
             </div>
             <div class="text-row">
               <a href="/retrieve">忘记密码，点击此处找回密码！</a>
@@ -61,6 +61,9 @@
 <script>
   import { sendEmailCode, sendRegisterInfo } from '../api'
   import router from '../router';
+  import md5 from 'js-md5';
+  import { Message } from '@arco-design/web-vue';
+  import '@arco-design/web-vue/es/message/style/css.js'
 
   export default {
     name: 'Register',
@@ -78,57 +81,66 @@
     methods: {
       emailCodeButtonClick() {
         if (this.email === "") {
-          alert("请先填写你的邮箱！");
-          this.email = "";
+          Message.info("请先填写你的邮箱！");
+          this.captcha = "";
         } else {
           const getObj = {
             type: 'reg',
             email: this.email
           }
           sendEmailCode(getObj).then(res => {
-            alert("验证码已发送，请前往邮箱查阅！")
+            Message.info("验证码已发送，请前往邮箱查阅！")
             console.log("邮箱成功发送返回：", res);
           }).catch(err => {
             console.log(err);
-            alert(err.response.data.msg);
+            Message.info(err.response.data.msg);
           })
+        }
+      },
+      judgeIfInput(event) {
+        const target = event.target;
+        if (target.tagName === "INPUT" && this.name !== "" && this.nickname !== "" && this.s_id !== "" &&
+        this.password !== "" && this.repassword !== "" && this.email !== "" && this.captcha !== "") {
+          this.registerButtonClick();
         }
       },
       registerButtonClick() {
         if (this.name === "") {
-          alert("请填写你的姓名！");
+          Message.info("请填写你的姓名！");
         } else if (this.nickname === "") {
-          alert("请填写你的昵称！");
+          Message.info("请填写你的昵称！");
         } else if (this.s_id === "") {
-          alert("请填写你的学号！");
+          Message.info("请填写你的学号！");
         } else if (this.password === "") {
-          alert("请填写你的密码！");
+          Message.info("请填写你的密码！");
         } else if (this.repassword === "") {
-          alert("请填写确认密码！");
+          Message.info("请填写确认密码！");
         } else if (this.email === "") {
-          alert("请填写你的邮箱！");
+          Message.info("请填写你的邮箱！");
         } else if (this.captcha === "") {
-          alert("请填写邮箱验证码！")
+          Message.info("请填写邮箱验证码！")
         } else if (this.password !== this.repassword) {
-          alert("输入的两次密码不一致！")
+          Message.info("输入的两次密码不一致！")
+        } else if (this.password.length < 6 || this.password.length > 22) {
+          Message.info("你的密码长度必须在 6 ~ 22 位！");
         } else {
           const postObj = {
             name: this.name,
             nickname: this.nickname,
             email: this.email,
-            password: this.password,
+            password: md5(this.password),
             s_id: this.s_id,
             captcha: this.captcha
           }
           sendRegisterInfo(postObj).then(res => {
             console.log("注册成功返回：", res);
-            alert('注册成功');
+            Message.info('注册成功');
             if (res.data.code === 200) {
-              router.push('/login');
+              router.push('/');
             }
           }).catch(err => {
             console.log("错误信息：", err.response.data.msg);
-            alert(err.response.data.msg);
+            Message.info(err.response.data.msg);
           });
         }
       }
@@ -144,7 +156,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 513.61px;
+    width: 512px;
     margin: 22px auto;
   }
   #register-card {
@@ -152,7 +164,7 @@
     background-color: #f5f6f9;
     border-radius: 5px;
     border-top: 2px solid #4582b31c;
-    width: 513.61px;
+    width: 512px;
     display: flex;
     flex-direction: column;
   }
