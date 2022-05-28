@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { sendEmailCode } from '../api';
+import { sendEmailCode, sendResetPassword } from '../api';
 import router from '../router';
 
 export default {
@@ -44,6 +44,55 @@ export default {
       email: "",
       captcha: "",
       password: ""
+    }
+  },
+  methods: {
+    emailCheckCode () {
+      let that = this;
+      console.log("正在检查邮箱格式...");
+      if (that.email.search('@') == -1) {
+        alert("请输入邮箱的正确格式！");
+        console.log("邮箱格式错误");
+      }
+      else {
+        const getObj = {
+          type: "reset",
+          email: that.email
+        }
+        sendEmailCode(getObj).then(res => {
+          alert("验证码已发送，请前往邮箱查阅！");
+          console.log("已发送验证码", res);
+        }).catch(err => {
+          console.log(err);
+          alert(err.response.data.msg);
+        })
+      }
+    },
+    send () {
+      let that = this;
+      if (that.captcha == "") {
+        alert("请输入验证码！")
+      }
+      else if (that.password.length < 6 || that.password.length > 16) {
+        alert("密码长度应当为6-16位!");
+      }
+      else {
+        const putObj = {
+          email: that.email,
+          captcha: that.captcha,
+          password: that.password
+        }
+        sendResetPassword(putObj).then(res => {
+          alert("密码已重置，即将返回登录页面！")
+          if (res.data.code === 200) {
+            router.push('/login');
+          }
+        }).catch(err => {
+          console.log(err);
+          alert(err.response.data.msg);
+        })
+      }
+      console.log("发送重置密码请求");
     }
   }
 }
