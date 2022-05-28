@@ -25,7 +25,10 @@
             <button @click="send">重置密码</button>
           </div>
         <div class="text-row">
-            <a @click="gotoLogin">点击此处返回登陆页面！</a>
+            <router-link :to="{path: '/login'}">点击此处返回登陆页面！</router-link>
+          </div>
+           <div class="text-row">
+            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
           </div>
       </div>
     </div>
@@ -88,7 +91,7 @@ export default {
         sendResetPassword(putObj).then(res => {
           Message.info("密码已重置，即将返回登录页面！")
           if (res.data.code === 200) {
-            router.push('/login');
+            this.$router.push('/login');
           }
         }).catch(err => {
           console.log(err);
@@ -96,9 +99,6 @@ export default {
         })
       }
       console.log("发送重置密码请求");
-    },
-    gotoLogin(){
-      this.$router.push("/login")
     }
   }
 }
