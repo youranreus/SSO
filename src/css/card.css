@@ -87,7 +87,7 @@ button {
 }
 
 .text-row {
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: center;
 }
 
@@ -97,4 +97,8 @@ button {
   letter-spacing: 0.05rem;
   color: rgba(116, 96, 96, 0.808);
   cursor: pointer;
+}
+
+.text-row a:hover {
+  color:rgba(117, 53, 53, 0.808);
 }
