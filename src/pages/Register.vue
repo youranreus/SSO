@@ -50,6 +50,9 @@
             <div class="text-row">
               <router-link :to="{path: '/login'}">已有账号，点击此处返回登陆页面！</router-link>
             </div>
+            <div class="text-row">
+              <router-link :to="{path: '/retrieve'}">忘记密码，点击此处找回密码！</router-link>
+            </div>
         </div>
       </div>
   </div>

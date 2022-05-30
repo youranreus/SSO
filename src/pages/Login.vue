@@ -19,6 +19,9 @@
           <div class="text-row">
             <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
           </div>
+          <div class="text-row">
+              <router-link :to="{path: '/retrieve'}">忘记密码，点击此处找回密码！</router-link>
+            </div>
         </div>
       </div>
   </div>
