@@ -48,10 +48,10 @@
                 <button @click="registerButtonClick">注册</button>
             </div>
             <div class="text-row">
-              <router-link :to="{path: '/login'}">已有账号，点击此处返回登陆页面！</router-link>
+              <router-link :to="{path: '/login', query: {from: urlFrom}}">已有账号，点击此处返回登陆页面！</router-link>
             </div>
             <div class="text-row">
-              <router-link :to="{path: '/retrieve'}">忘记密码，点击此处找回密码！</router-link>
+              <router-link :to="{path: '/retrieve', query: {from: urlFrom}}">忘记密码，点击此处找回密码！</router-link>
             </div>
         </div>
       </div>
@@ -75,9 +75,14 @@
         password: "",
         repassword: "",
         email: "",
-        captcha: ""
+        captcha: "",
+        urlFrom: ""
       }
     },
+    created() {
+      this.urlFrom = this.$route.query.from;
+    }
+    ,
     methods: {
       emailCodeButtonClick() {
         if (this.email === "") {
@@ -150,10 +155,6 @@
 
 <style scoped>
   @import "../css/card.css";
-  .container {
-    margin: 22px auto;
-  }
-
   .input-email {
     display: flex;
   }
