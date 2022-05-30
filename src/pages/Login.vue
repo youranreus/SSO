@@ -51,7 +51,7 @@
       back() {
         if (this.$route.query.from !== undefined) {
           window.location.href = this.$route.query.from + "?UUID=" 
-           + localStorage.getItem('UUID') + "&token=" + localStorage.getItem('token');
+           + JSON.parse(localStorage.getItem('USER_INFO')).UUID + "&token=" + localStorage.getItem('token');
         } else {
           router.push('/');
         }
