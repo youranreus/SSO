@@ -4,11 +4,11 @@
       {{ message }}
     </h2>
     <div v-if="show" class="row">
-      <router-link :to="{path: '/login'}">登录</router-link>
-      <router-link :to="{path: '/register'}">注册</router-link>
+      <router-link :to="{path: '/login', query: {from: urlFrom}}">登录</router-link>
+      <router-link :to="{path: '/register', query: {from: urlFrom}}">注册</router-link>
     </div>
     <div v-if="!show" class="row">
-      <router-link id="logout" @click="logout" :to="{path: '/'}">退出登录</router-link>
+      <router-link id="logout" @click="logout" :to="{path: '/', query: {from: urlFrom}}">退出登录</router-link>
     </div>
   </div>
 
@@ -24,15 +24,18 @@ export default {
       show: true,
       message: "",
       nowTime: 0,
-      uickName: ""
+      uickName: "",
+      urlFrom: ""
     }
   },
   created() {
+    this.urlFrom = this.$route.query.from;
     this.judgeToken();
     this.initialPage();
   },
   methods: {
     judgeToken() {
+      this.urlFrom = this.$route.query.from;
       const token = localStorage.getItem('token');
       if (token !== null) {
         sendToken().then(res => {
@@ -75,7 +78,10 @@ export default {
 <style scoped>
   @import "../css/card.css";
   .card {
-    margin: 176px auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .title {
     font-size: 3rem;

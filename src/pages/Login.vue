@@ -17,11 +17,11 @@
             <button @click="loginBtnClick">登陆</button>
           </div>
           <div class="text-row">
-            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
+            <router-link :to="{path: '/register', query: {from: urlFrom}}">还没有账号，点击此处立即注册！</router-link>
           </div>
           <div class="text-row">
-              <router-link :to="{path: '/retrieve'}">忘记密码，点击此处找回密码！</router-link>
-            </div>
+              <router-link :to="{path: '/retrieve', query: {from: urlFrom}}">忘记密码，点击此处找回密码！</router-link>
+          </div>
         </div>
       </div>
   </div>
@@ -39,10 +39,12 @@
     data() {
       return {
         account: "",
-        password: ""
+        password: "",
+        urlFrom: ""
       }
     },
     created() {
+      this.urlFrom = this.$route.query.from;
       this.judgeToken();
     },
     methods: {
@@ -105,9 +107,6 @@
 
 <style scoped>
   @import "../css/card.css";
-  .container {
-    margin: 76px auto;
-  }
   .row {
     flex-direction: column;
     padding: 0 15px;
