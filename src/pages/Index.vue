@@ -1,11 +1,14 @@
 <template>
-  <div class="container">
+  <div class="card">
     <h2 class="title">
       {{ message }}
     </h2>
     <div v-if="show" class="row">
       <router-link :to="{path: '/login'}">登录</router-link>
       <router-link :to="{path: '/register'}">注册</router-link>
+    </div>
+    <div v-if="!show" class="row">
+      <router-link id="logout" @click="logout" :to="{path: '/'}">退出登录</router-link>
     </div>
   </div>
 
@@ -59,21 +62,20 @@ export default {
       } else {
         this.message = `晚上好！${this.nickName}`;
       }
+    },
+    logout() {
+      localStorage.clear();
+      this.show = true;
+      this.initialPage();
     }
   }
 }
 </script>
 
 <style scoped>
-  .container {
-    display: flex;
-    flex-direction: column;
-    width: 512px;
+  @import "../css/card.css";
+  .card {
     margin: 176px auto;
-    box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
-    background-color: #f5f6f9;
-    border-radius: 5px;
-    border-top: 2px solid #4582b31c;
   }
   .title {
     font-size: 3rem;
@@ -83,11 +85,11 @@ export default {
     margin: 34px 0;
     letter-spacing: .3rem;
   }
-  .container .row {
-    display: flex;
+  .card .row {
     border-top: 3px solid #f9f9f9;
+    margin-bottom: 0;
   }
-  .container .row a {
+  .card .row a {
     outline: none;
     padding: 20px;
     width: 50%;
@@ -97,11 +99,20 @@ export default {
     font-size: 1.125rem;
     border-right: 3px solid #f9f9f9;
   }
-  .container .row a:last-child {
+  .card .row a:last-child {
     border-right: none;
+  }
+
+  #logout {
+    width: 100%;
+    letter-spacing: .56rem;
   }
 
   a {
     text-decoration: none;
+  }
+
+  a:hover {
+    background-color: #8ab1d11c;
   }
 </style>
