@@ -25,10 +25,10 @@
             <button @click="send">重置密码</button>
           </div>
         <div class="text-row">
-            <router-link :to="{path: '/login'}">点击此处返回登陆页面！</router-link>
+            <router-link :to="{path: '/login', query: {from: urlFrom}}">点击此处返回登陆页面！</router-link>
           </div>
            <div class="text-row">
-            <router-link :to="{path: '/register'}">还没有账号，点击此处立即注册！</router-link>
+            <router-link :to="{path: '/register', query: {from: urlFrom}}">还没有账号，点击此处立即注册！</router-link>
           </div>
       </div>
     </div>
@@ -38,7 +38,6 @@
 
 <script>
 import { sendEmailCode, sendResetPassword } from '../api';
-import router from '../router';
 import md5 from 'js-md5';
 import { Message } from '@arco-design/web-vue';
 import '@arco-design/web-vue/es/message/style/css.js'
@@ -113,8 +112,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 513.61px;
-  margin: 76px auto;
+  width: 512px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #register-card {
@@ -122,7 +124,7 @@ export default {
   background-color: #f5f6f9;
   border-radius: 5px;
   border-top: 2px solid #4582b31c;
-  width: 513.61px;
+  width: 512px;
   display: flex;
   flex-direction: column;
 }
