@@ -14,7 +14,7 @@
             <input v-model="password" id="password" type="password" placeholder="请输入密码" name="password" required>
           </div>
           <div class="button-row">
-            <button @click="loginBtnClick">登陆</button>
+            <button id="loginBtn" @click="loginBtnClick">登陆</button>
           </div>
           <div class="text-row">
             <router-link :to="{path: '/register', query: {from: urlFrom}}">还没有账号，点击此处立即注册！</router-link>
@@ -40,7 +40,8 @@
       return {
         account: "",
         password: "",
-        urlFrom: ""
+        urlFrom: "",
+        errMessage: ""
       }
     },
     created() {
@@ -74,12 +75,54 @@
           this.loginBtnClick();
         }
       },
+      newErrLogin(cnts, nowTime) {
+        const endTime = nowTime + 1000 * 60 * 10;
+        const lockTime = nowTime + 1000 * 60 * 2;
+        const newErrLogin = {
+          errCnts: cnts,
+          errEndTime: endTime,
+          errLockTime: lockTime
+        }
+        localStorage.setItem('errLogin', JSON.stringify(newErrLogin));
+      },
+      judgeLockLogin(nowTime) {
+        const lastErrLogin = JSON.parse(localStorage.getItem('errLogin'));
+        if (lastErrLogin === null) {
+          return false;
+        } else if (nowTime < lastErrLogin.errLockTime && lastErrLogin.errCnts >= 5) {
+            const durTime = parseInt((lastErrLogin.errLockTime - nowTime) / 1000);
+            const minute = parseInt(durTime / 60);
+            const minStr = minute === 0 ? "" : ` ${minute} 分 `;
+            Message.info(`请等待 ${minStr}${durTime % 60} 秒，才能进行登录`);
+            return true;
+        } else {
+            if (lastErrLogin.errCnts >= 5 || nowTime > lastErrLogin.errEndTime) {
+              localStorage.removeItem('errLogin');
+            }
+            return false;
+        }
+      },
+      passwordError(nowTime) {
+        const lastErrLogin = JSON.parse(localStorage.getItem('errLogin'));
+        let errCnts = 1;
+        if (lastErrLogin === null) {
+          this.newErrLogin(errCnts, nowTime);
+        } else {
+          errCnts = lastErrLogin.errCnts + 1;
+          this.newErrLogin(errCnts, nowTime);
+        }
+        this.errMessage = `${this.errMessage}！你还有 ${5 - errCnts} 次登录机会`;
+      },
       loginBtnClick() {
         if (this.account === "") {
           Message.info("请填写学号或邮箱！");
         } else if (this.password === "") {
           Message.info("请填写密码！");
         } else {
+          const nowTime = Date.now();
+          if (this.judgeLockLogin(nowTime)) {
+            return;
+          }
           const postObj = {
             account: this.account,
             password: md5(this.password)
@@ -88,16 +131,22 @@
             if (res.data.code === 200) {
               console.log("登陆成功返回信息：", res.data);
               localStorage.setItem('token', res.data.data.token);
-              localStorage.setItem('USER_INFO', JSON.stringify(res.data.data, (key, val) => {
-                if (key === "token") return undefined;
-                else return val;
+              localStorage.setItem('USER_INFO', JSON.stringify(
+                res.data.data,
+                (key, val) => {
+                  if (key === "token") return undefined;
+                  else return val;
               }));
+              localStorage.removeItem('errLogin');
               Message.info("登陆成功！");
               this.back();
             }
           }).catch(err => {
-            console.log(err.response.data.msg);
-            Message.info(err.response.data.msg);
+            this.errMessage = err.response.data.msg;
+            if (this.errMessage === "密码错误") {
+              this.passwordError(nowTime);
+            }
+            Message.info(this.errMessage);
           });
         }
       }
