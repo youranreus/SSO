@@ -9,6 +9,7 @@
     </div>
     <div v-if="!show" class="row">
       <router-link id="logout" @click="logout" :to="{path: '/', query: {from: urlFrom}}">退出登录</router-link>
+      <router-link :to="{path: '/user'}">个人信息</router-link>
     </div>
   </div>
 
@@ -110,7 +111,7 @@ export default {
   }
 
   #logout {
-    width: 100%;
+    /*width: 100%;*/
     letter-spacing: .56rem;
   }
 

@@ -36,7 +36,6 @@ const sendResetPassword = (putObj) => {
   return API.put('/user/password', putObj);
 }
 
-export const getHi = () => API.get('/')
 export { sendLoginInfo, sendToken }
 export { sendEmailCode, sendRegisterInfo }
 export { sendResetPassword }

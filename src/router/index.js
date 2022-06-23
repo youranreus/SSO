@@ -35,6 +35,13 @@ const routes = [
     meta: {
       title: '找回密码'
     }
+  },
+  {
+    path: '/user',
+    component: () => import('../pages/User.vue'),
+    meta: {
+      title: '找回密码'
+    }
   }
 ]
 
