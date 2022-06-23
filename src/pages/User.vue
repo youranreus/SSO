@@ -47,19 +47,22 @@ function convertData(input) {
     <a-divider orientation="center"></a-divider>
 
     <div class="content">
-      <div v-if="!UserData.name">加载中</div>
+      <div v-if="!UserData.name">
+        <a-skeleton :animation="true">
+          <a-skeleton-line :rows="3" />
+        </a-skeleton>
+      </div>
       <div v-else>
         <a-descriptions :data="convertData(UserData)" size="large" :column="2"/>
+        <div class="footer">
+          <a-button type="text">
+            <template #icon>
+              <icon-edit/>
+            </template>
+            编辑
+          </a-button>
+        </div>
       </div>
-    </div>
-
-    <div class="footer">
-      <a-button type="text">
-        <template #icon>
-          <icon-edit/>
-        </template>
-        编辑
-      </a-button>
     </div>
   </div>
 </template>
