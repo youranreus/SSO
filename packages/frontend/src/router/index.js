@@ -40,7 +40,7 @@ const routes = [
     path: '/user',
     component: () => import('../pages/User.vue'),
     meta: {
-      title: '找回密码'
+      title: '用户信息'
     }
   }
 ]
