@@ -22,6 +22,9 @@ async function Register(data) {
         const check = await EmailService.validate(data.captcha, data.email)
         if(check.code !== 200)
             return check
+        
+        if ((await User.findOne({where: {s_id: data.s_id}})) !== null)
+            return new Result("重复的学号", 400);
 
         // 这里需要添加fields，避免传入的data中包含了非法字段
         const u = User.build(data, {fields: ['name', 'nickname', 'email', 'password', 's_id']})
