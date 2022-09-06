@@ -86,6 +86,7 @@ async function Login(account, password) {
         )
 
         try {
+            TokenWhiteList.sync();
             const t = await TokenWhiteList.findOne({where: {user: u.UUID}})
             if (t === null)
                 await TokenWhiteList.create({token: token, user: u.UUID})
