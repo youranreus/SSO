@@ -20,6 +20,7 @@ const DBConfig = [
         host: process.env.DB_HOST,
         dialect: process.env.DB_TYPE,
         logging: isDev ? console.log : false,
+        port: process.env.DB_PORT,
         define: {
             charset: 'utf8mb4',
             dialectOptions: {
