@@ -12,5 +12,9 @@ export default defineConfig({
                 ArcoResolver()
             ]
         })
-    ]
+    ],
+    envPrefix: "VUE_APP_",
+    define: {
+        'process.env': {}
+    }
 })

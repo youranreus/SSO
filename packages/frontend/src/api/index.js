@@ -5,9 +5,10 @@
 
 import axios from 'axios'
 import Qs from 'qs'
+import { VUE_APP_API } from '../config';
 
 const API = axios.create({
-  baseURL: 'https://sso.exia.xyz/api'
+  baseURL: VUE_APP_API
 })
 
 API.interceptors.request.use((req) => {
