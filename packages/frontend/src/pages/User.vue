@@ -3,6 +3,7 @@ import { ref, reactive } from "vue";
 import student_boy from "../assets/img/student-boy.svg"
 import { IconEdit } from '@arco-design/web-vue/es/icon';
 import {UpdateUserData} from '../api/index'
+import { Message } from '@arco-design/web-vue';
 
 const UserData = ref({})
 const FormData = reactive({
@@ -57,10 +58,14 @@ const handleBeforeOk = (done) => {
       localStorage.setItem('USER_INFO', JSON.stringify(FormData))
       UserData.value = FormData
       FormVisible.value = false
+      Message.success('修改成功')
       done();
     }
   }).catch(err => {
-    console.log(err)
+    if (err.response.data.msg === 'SequelizeUniqueConstraintError: Validation error')
+      Message.warning('邮箱重复了')
+    else
+      Message.warning(err.response.data.msg)
     done();
   })
 };
