@@ -5,6 +5,18 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AAvatar: typeof import('@arco-design/web-vue')['Avatar']
+    AButton: typeof import('@arco-design/web-vue')['Button']
+    ADescriptions: typeof import('@arco-design/web-vue')['Descriptions']
+    ADivider: typeof import('@arco-design/web-vue')['Divider']
+    AForm: typeof import('@arco-design/web-vue')['Form']
+    AFormItem: typeof import('@arco-design/web-vue')['FormItem']
+    AInput: typeof import('@arco-design/web-vue')['Input']
+    AModal: typeof import('@arco-design/web-vue')['Modal']
+    AOption: typeof import('@arco-design/web-vue')['Option']
+    ASelect: typeof import('@arco-design/web-vue')['Select']
+    ASkeleton: typeof import('@arco-design/web-vue')['Skeleton']
+    ASkeletonLine: typeof import('@arco-design/web-vue')['SkeletonLine']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

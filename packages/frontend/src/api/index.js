@@ -37,6 +37,8 @@ const sendResetPassword = (putObj) => {
   return API.put('/user/password', putObj);
 }
 
+const UpdateUserData = (putObj) => API.put('/user', Qs.stringify(putObj))
+
 export { sendLoginInfo, sendToken }
 export { sendEmailCode, sendRegisterInfo }
-export { sendResetPassword }
+export { sendResetPassword, UpdateUserData }
