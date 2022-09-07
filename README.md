@@ -17,6 +17,7 @@ npm run start
 ```
 
 ## 构建
+~~还没用过~~
 ```bash
 npx lerna run build
 ```
