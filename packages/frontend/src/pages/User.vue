@@ -1,9 +1,28 @@
 <script setup>
-import {ref} from "vue";
+import { ref, reactive } from "vue";
 import student_boy from "../assets/img/student-boy.svg"
-import {IconEdit} from '@arco-design/web-vue/es/icon';
+import { IconEdit } from '@arco-design/web-vue/es/icon';
+import {UpdateUserData} from '../api/index'
 
 const UserData = ref({})
+const FormData = reactive({
+  nickname: "",
+  name: "",
+  s_id: "",
+  gender: "",
+  grade: "",
+  email: ""
+})
+const FormVisible = ref(false)
+const keyMap = {
+  name: "姓名",
+  s_id: "学号",
+  nickname: "昵称",
+  gender: "性别",
+  grade: "年级",
+  email: "邮箱"
+}
+
 if (localStorage.getItem('USER_INFO')) {
   UserData.value = JSON.parse(localStorage.getItem('USER_INFO'))
   console.log(JSON.parse(localStorage.getItem('USER_INFO')))
@@ -12,14 +31,6 @@ if (localStorage.getItem('USER_INFO')) {
 function convertData(input) {
   const data = []
   const filterMap = ["UUID", "role"]
-  const keyMap = {
-    nickname: "昵称",
-    name: "姓名",
-    s_id: "学号",
-    gender: "性别",
-    grade: "年级",
-    email: "邮箱"
-  }
 
   for (const key in input) {
     if (filterMap.indexOf(key) === -1) {
@@ -31,6 +42,31 @@ function convertData(input) {
   }
 
   return data
+}
+
+const handleOpen = () => {
+  FormVisible.value = true;
+  for (const key in FormData) 
+    FormData[key] = UserData.value[key]
+};
+
+const handleBeforeOk = (done) => {
+  console.log(FormData);
+  UpdateUserData(FormData).then(res => {
+    if (res.status === 200) {
+      localStorage.setItem('USER_INFO', JSON.stringify(FormData))
+      UserData.value = FormData
+      FormVisible.value = false
+      done();
+    }
+  }).catch(err => {
+    console.log(err)
+    done();
+  })
+};
+
+const handleCancel = () => {
+  FormVisible.value = false;
 }
 </script>
 
@@ -53,16 +89,24 @@ function convertData(input) {
         </a-skeleton>
       </div>
       <div v-else>
-        <a-descriptions :data="convertData(UserData)" size="large" :column="2"/>
+        <a-descriptions :data="convertData(UserData)" size="large" :column="2" />
         <div class="footer">
-          <a-button type="text">
+          <a-button type="text" @click="handleOpen">
             <template #icon>
-              <icon-edit/>
+              <icon-edit />
             </template>
             编辑
           </a-button>
         </div>
       </div>
+
+      <a-modal v-model:visible="FormVisible" title="编辑信息" @cancel="handleCancel" @before-ok="handleBeforeOk">
+        <a-form :model="FormData">
+          <a-form-item v-for="value, key in keyMap" :field="key" :label="value">
+            <a-input v-model="FormData[key]" :disabled="(key === 's_id' || key === 'name')"/>
+          </a-form-item>
+        </a-form>
+      </a-modal>
     </div>
   </div>
 </template>
